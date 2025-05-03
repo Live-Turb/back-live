@@ -1,0 +1,32 @@
+# Ignorar a pasta de vídeos
+/VIDEOS
+
+# Ignorar arquivos de ambiente
+.env
+.env.*
+
+# Ignorar arquivos de log
+*.log
+
+# Ignorar dependências de pacotes
+/vendor
+/node_modules
+
+# Ignorar arquivos de cache e temporários
+/storage/*.key
+/public/storage
+/build
+/.idea
+.vscode/
+debugbar/
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+.env.backup
+.env.prod
+.env.local
+.env.development
+.env.staging
+.env.production

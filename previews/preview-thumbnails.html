@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang='pt-BR'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Preview de Thumbnail do Vídeo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #0f172a;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .preview-section {
+            background-color: rgba(30, 41, 59, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        h2 {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            color: #60a5fa;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: rgba(15, 23, 42, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .video-container {
+            width: 100%;
+            aspect-ratio: 9/16;
+            max-height: 320px;
+            overflow: hidden;
+            position: relative;
+        }
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(59, 130, 246, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .play-button:hover {
+            background-color: rgba(59, 130, 246, 1);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            border-left: 20px solid white;
+            margin-left: 5px;
+        }
+        .card-info {
+            padding: 12px;
+        }
+        .card-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .card-metadata {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            display: flex;
+            justify-content: space-between;
+        }
+        .chip {
+            display: inline-block;
+            background-color: rgba(30, 64, 175, 0.3);
+            color: #93c5fd;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            margin-top: 8px;
+            margin-right: 5px;
+        }
+        .metadata {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+        .usage {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Preview da Nova Exibição de Thumbnails (9:16)</h1>
+    
+    <div class='container'>
+        <div class='preview-section'>
+            <h2>Biblioteca de Criativos</h2>
+            <div class='card-grid'>
+                <!-- Card 1 -->
+                <div class='card'>
+                    <div class='video-container'>
+                        <div class='metadata'>1257</div>
+                        <div class='usage'>Usam esse Criativo</div>
+                        <video 
+                            preload='metadata'
+                            src='https://prod-minio.ja6ipr.easypanel.host/american-producao/509253c88ed4fe37fe17a47d50855e64-Maratona%20Vocal%20CR%2006.mp4'
+                            muted
+                        ></video>
+                        <div class='play-button'>
+                            <div class='play-icon'></div>
+                        </div>
+                    </div>
+                    <div class='card-info'>
+                        <div class='card-title'>Teste Criativo 01</div>
+                        <div class='card-metadata'>
+                            <span>ID: 1256</span>
+                            <span>⬇️</span>
+                        </div>
+                        <div>
+                            <span class='chip'>Facebook</span>
+                            <span class='chip'>PT-BR</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 2 -->
+                <div class='card'>
+                    <div class='video-container'>
+                        <div class='metadata'>1354</div>
+                        <div class='usage'>Usam esse Criativo</div>
+                        <video 
+                            preload='metadata'
+                            src='https://prod-minio.ja6ipr.easypanel.host/american-producao/509253c88ed4fe37fe17a47d50855e64-Maratona%20Vocal%20CR%2006.mp4'
+                            muted
+                        ></video>
+                        <div class='play-button'>
+                            <div class='play-icon'></div>
+                        </div>
+                    </div>
+                    <div class='card-info'>
+                        <div class='card-title'>Teste Criativo 02</div>
+                        <div class='card-metadata'>
+                            <span>ID: 1257</span>
+                            <span>⬇️</span>
+                        </div>
+                        <div>
+                            <span class='chip'>Instagram</span>
+                            <span class='chip'>EN-US</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 3 - Demonstração de fallback para imagem -->
+                <div class='card'>
+                    <div class='video-container'>
+                        <div class='metadata'>982</div>
+                        <div class='usage'>Usam esse Criativo</div>
+                        <img src='https://via.placeholder.com/400x720/1e3a8a/ffffff?text=Thumbnail+Fallback' alt='Fallback' style='width: 100%; height: 100%; object-fit: cover;'>
+                        <div class='play-button'>
+                            <div class='play-icon'></div>
+                        </div>
+                    </div>
+                    <div class='card-info'>
+                        <div class='card-title'>Teste Criativo 03</div>
+                        <div class='card-metadata'>
+                            <span>ID: 1258</span>
+                            <span>⬇️</span>
+                        </div>
+                        <div>
+                            <span class='chip'>TikTok</span>
+                            <span class='chip'>PT-BR</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Código para capturar o primeiro quadro dos vídeos quando carregados
+        document.addEventListener('DOMContentLoaded', function() {
+            const videos = document.querySelectorAll('video');
+            
+            videos.forEach(video => {
+                // Quando os metadados são carregados, define o tempo para 0.1s para capturar o primeiro quadro visível
+                video.onloadedmetadata = function() {
+                    // Um pequeno tempo para garantir que não seja um quadro preto
+                    video.currentTime = 0.1;
+                };
+                
+                // Quando o tempo é atualizado (chegando ao quadro desejado), pausamos o vídeo
+                video.ontimeupdate = function() {
+                    if (video.currentTime > 0) {
+                        video.pause();
+                    }
+                };
+                
+                // Tratamento de erro para quando o vídeo não pode ser carregado
+                video.onerror = function() {
+                    console.log('Erro ao carregar o vídeo, seria substituído por imagem fallback');
+                    // Na implementação real, aqui seria inserida uma imagem de fallback
+                };
+            });
+            
+            // Simulação do comportamento de clique no botão de play
+            const playButtons = document.querySelectorAll('.play-button');
+            
+            playButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('Aqui o vídeo seria reproduzido em tela cheia no formato 9:16');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\ViewStatistic;
+use App\Models\TemplateView;
+use App\Models\ViewBillingRecord;
+use App\Models\UserBillingControl;
+use App\Models\User;
+use App\Models\Subscription;
+use App\Exceptions\BillingException;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+
+class ViewTrackingService
+{
+    const BASIC_PLAN_VIEWS = 6000; // Limite do plano básico
+    const VIEWS_PER_CHARGE = 500; // Quantidade de visualizações por cobrança
+    const CHARGE_VALUE = 10.00; // Valor da cobrança em reais
+    const MAX_PENDING_AMOUNT = 100.00; // Valor máximo pendente permitido
+    const AUTO_CHARGE_THRESHOLD = 50.00; // Valor para cobrança automática
+
+    /**
+     * Verifica o limite de visualizações do usuário
+     * @param int $userId ID do usuário
+     * @return array Informações sobre as visualizações do usuário
+     */
+    public function checkViewsLimit($userId)
+    {
+        $user = User::findOrFail($userId);
+        $subscription = Subscription::where('user_id', $userId)
+            ->where('status', 'active')
+            ->first();
+
+        $totalViews = $this->getTotalViews($userId);
+        $hasSubscription = !is_null($subscription);
+        $baseLimit = 6000; // Limite base de visualizações
+        $extraViews = max(0, $totalViews - $baseLimit);
+        
+        // Calcula o custo das visualizações extras
+        $extraViewsCost = 0;
+        if ($extraViews > 0) {
+            $extraViewsBlocks = ceil($extraViews / 500);
+            $extraViewsCost = $extraViewsBlocks * 10.00;
+        }
+
+        // Verifica se o usuário está bloqueado
+        $billingControl = UserBillingControl::firstOrCreate(
+            ['user_id' => $userId],
+            [
+                'pending_amount' => 0,
+                'is_blocked' => false,
+                'last_ip' => request()->ip(),
+                'device_fingerprint' => md5(request()->userAgent() . request()->ip())
+            ]
+        );
+
+        // Calcula visualizações restantes
+        $remaining = max(0, $baseLimit - $totalViews);
+
+        return [
+            'current' => $totalViews,
+            'limit' => $baseLimit,
+            'remaining' => $remaining,
+            'extra_views' => $extraViews,
+            'extra_cost' => $extraViewsCost,
+            'has_subscription' => $hasSubscription,
+            'is_blocked' => $billingControl->is_blocked,
+            'pending_amount' => $billingControl->pending_amount,
+            'block_reason' => $billingControl->block_reason,
+            'plan_name' => $subscription ? $subscription->plan_name : 'Basic',
+            'is_exceeded' => $extraViews > 0
+        ];
+    }
+
+    protected function getTotalViews($userId)
+    {
+        return ViewStatistic::where('user_id', $userId)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->count();
+    }
+}
