@@ -14,16 +14,13 @@ return new class extends Migration
             'template_type' => 'youtube'
         ]);
 
-        // Garante que a coluna não aceita null e tem valor padrão
-        Schema::table('video_details', function (Blueprint $table) {
-            $table->enum('template_type', ['youtube', 'instagram'])->nullable(false)->default('youtube')->change();
-        });
+        // Garante que a coluna não aceita null e tem valor padrão usando SQL bruto
+        DB::statement("ALTER TABLE `video_details` MODIFY `template_type` ENUM('youtube', 'instagram') NOT NULL DEFAULT 'youtube'");
     }
 
     public function down()
     {
-        Schema::table('video_details', function (Blueprint $table) {
-            $table->enum('template_type', ['youtube', 'instagram'])->nullable()->default(null)->change();
-        });
+        // Reverte para permitir valores null usando SQL bruto
+        DB::statement("ALTER TABLE `video_details` MODIFY `template_type` ENUM('youtube', 'instagram') NULL DEFAULT NULL");
     }
 };
