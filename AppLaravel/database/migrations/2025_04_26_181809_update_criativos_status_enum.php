@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -11,9 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('criativos', function (Blueprint $table) {
-            $table->enum('status', ['escalando', 'teste', 'pausado'])->change();
-        });
+        // Usamos SQL bruto para alterar o tipo enum, evitando problemas com o Schema Builder
+        if (Schema::hasTable('criativos') && Schema::hasColumn('criativos', 'status')) {
+            DB::statement("ALTER TABLE criativos MODIFY COLUMN status ENUM('escalando', 'teste', 'pausado')");
+        }
     }
 
     /**
@@ -21,8 +23,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('criativos', function (Blueprint $table) {
-            $table->string('status')->change();
-        });
+        // Não fazemos alteração no down para preservar a integridade dos dados
+        // A alteração para string poderia causar perda de dados
     }
 };

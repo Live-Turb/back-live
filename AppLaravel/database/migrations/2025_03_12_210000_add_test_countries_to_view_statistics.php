@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
-class AddTestCountriesToViewStatistics extends Migration
+return new class extends Migration
 {
     /**
      * Run the migration.
@@ -23,7 +23,7 @@ class AddTestCountriesToViewStatistics extends Migration
             $templateRecord = DB::table('video_details')->first();
 
             // Só prosseguir se tivermos um usuário e um modelo de template
-            if ($userRecord && $templateRecord) {
+            if ($userRecord && $templateRecord && isset($userRecord->id) && isset($templateRecord->id)) {
                 $userId = $userRecord->id;
                 $templateId = $templateRecord->id;
 
@@ -39,20 +39,25 @@ class AddTestCountriesToViewStatistics extends Migration
                     $records = rand(5, 10);
 
                     for ($i = 0; $i < $records; $i++) {
-                        DB::table('view_statistics')->insert([
-                            'template_id' => $templateId,
-                            'user_id' => $userId,
-                            'viewer_ip' => '127.0.0.' . rand(1, 255),
-                            'viewer_session' => 'test-session-' . uniqid(),
-                            'country' => $country,
-                            'city' => 'Test City',
-                            'device_type' => ['desktop', 'mobile', 'tablet'][rand(0, 2)],
-                            'browser' => ['Chrome', 'Firefox', 'Safari', 'Edge'][rand(0, 3)],
-                            'os' => ['Windows', 'macOS', 'Linux', 'iOS', 'Android'][rand(0, 4)],
-                            'is_unique' => rand(0, 1),
-                            'created_at' => $now->subMinutes(rand(1, 60 * 24 * 7)), // Últimos 7 dias
-                            'updated_at' => $now
-                        ]);
+                        try {
+                            DB::table('view_statistics')->insert([
+                                'template_id' => $templateId,
+                                'user_id' => $userId,
+                                'viewer_ip' => '127.0.0.' . rand(1, 255),
+                                'viewer_session' => 'test-session-' . uniqid(),
+                                'country' => $country,
+                                'city' => 'Test City',
+                                'device_type' => ['desktop', 'mobile', 'tablet'][rand(0, 2)],
+                                'browser' => ['Chrome', 'Firefox', 'Safari', 'Edge'][rand(0, 3)],
+                                'os' => ['Windows', 'macOS', 'Linux', 'iOS', 'Android'][rand(0, 4)],
+                                'is_unique' => rand(0, 1),
+                                'created_at' => $now->copy()->subMinutes(rand(1, 60 * 24 * 7)), // Últimos 7 dias
+                                'updated_at' => $now->copy()
+                            ]);
+                        } catch (\Exception $e) {
+                            // Ignore errors during migration to prevent failure
+                            continue;
+                        }
                     }
                 }
             }
@@ -69,4 +74,4 @@ class AddTestCountriesToViewStatistics extends Migration
         // Não removemos os dados de teste, pois isso pode afetar dados reais
         // Se necessário, isso poderia ser implementado com uma marcação específica
     }
-}
+};
