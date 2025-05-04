@@ -10,12 +10,15 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('broad_cast_comments', function (Blueprint $table) {
-            $table->id();
-            $table->integer('video_details_id');
-            $table->text('comment');
-            $table->timestamps();
-        });
+        // Só cria a tabela se ela ainda não existir
+        if (!Schema::hasTable('broad_cast_comments')) {
+            Schema::create('broad_cast_comments', function (Blueprint $table) {
+                $table->id();
+                $table->integer('video_details_id');
+                $table->text('comment');
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -23,6 +26,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('broad_cast_comments');
+        // Como outras migrações podem ter criado a tabela, não vamos remover aqui
+        // para evitar conflitos
     }
 };
