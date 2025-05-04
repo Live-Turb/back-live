@@ -11,42 +11,45 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('anuncios', function (Blueprint $table) {
-            $table->id();
-            $table->string('titulo');
-            $table->enum('tag_principal', ['ESCALANDO', 'TESTE', 'PAUSADO']);
-            $table->date('data_anuncio');
-            $table->string('nicho');
-            $table->string('pais_codigo', 2);
-            $table->enum('status', ['Ativo', 'Inativo']);
-            $table->boolean('novo_anuncio')->default(false);
-            $table->boolean('destaque')->default(false);
-            $table->json('tags')->nullable();
-            $table->string('imagem')->nullable();
-            $table->string('url_video')->nullable();
-            $table->text('transcricao')->nullable();
+        // Verifica se a tabela já existe antes de tentar criá-la
+        if (!Schema::hasTable('anuncios')) {
+            Schema::create('anuncios', function (Blueprint $table) {
+                $table->id();
+                $table->string('titulo');
+                $table->string('tag_principal', 50)->nullable();
+                $table->date('data_anuncio');
+                $table->string('nicho');
+                $table->string('pais_codigo', 2);
+                $table->enum('status', ['Ativo', 'Inativo']);
+                $table->boolean('novo_anuncio')->default(false);
+                $table->boolean('destaque')->default(false);
+                $table->json('tags')->nullable();
+                $table->string('imagem')->nullable();
+                $table->string('url_video')->nullable();
+                $table->text('transcricao')->nullable();
 
-            // Campos de Produto
-            $table->enum('produto_tipo', ['Infoproduto', 'Produto Físico', 'Serviço', 'Assinatura']);
-            $table->enum('produto_estrutura', ['VSL', 'PLR', 'Webinar', 'Carta de Vendas']);
-            $table->string('produto_idioma');
-            $table->string('produto_rede_trafego');
-            $table->string('produto_funil_vendas');
+                // Campos de Produto
+                $table->enum('produto_tipo', ['Infoproduto', 'Produto Físico', 'Serviço', 'Assinatura']);
+                $table->enum('produto_estrutura', ['VSL', 'PLR', 'Webinar', 'Carta de Vendas']);
+                $table->string('produto_idioma');
+                $table->string('produto_rede_trafego');
+                $table->string('produto_funil_vendas');
 
-            // Campos de Link
-            $table->string('link_pagina_anuncio')->nullable();
-            $table->string('link_criativos_fb')->nullable();
-            $table->string('link_anuncios_escalados')->nullable();
-            $table->string('link_site_cloaker')->nullable();
+                // Campos de Link
+                $table->string('link_pagina_anuncio')->nullable();
+                $table->string('link_criativos_fb')->nullable();
+                $table->string('link_anuncios_escalados')->nullable();
+                $table->string('link_site_cloaker')->nullable();
 
-            // Campos Calculados (serão atualizados por lógica de aplicação)
-            $table->integer('contador_anuncios')->default(0);
-            $table->float('variacao_diaria')->default(0);
-            $table->float('variacao_semanal')->default(0);
+                // Campos Calculados
+                $table->integer('contador_anuncios')->default(0);
+                $table->double('variacao_diaria', 8, 2)->default(0)->comment('Número absoluto de anúncios nas últimas 24h');
+                $table->double('variacao_semanal', 8, 2)->default(0)->comment('Número absoluto de anúncios nos últimos 7 dias');
 
-            $table->timestamps();
-            $table->softDeletes();
-        });
+                $table->timestamps();
+                $table->softDeletes();
+            });
+        }
     }
 
     /**
@@ -54,6 +57,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('anuncios');
+        // Não removemos a tabela aqui, pois outras migrações podem depender dela
     }
 };
