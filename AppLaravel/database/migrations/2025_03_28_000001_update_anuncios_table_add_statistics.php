@@ -12,15 +12,26 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('anuncios', function (Blueprint $table) {
-            // Adicionando os novos campos solicitados
-            $table->integer('variacao_diaria')->default(0)->after('contador_anuncios')
-                ->comment('Número absoluto de anúncios nas últimas 24h');
-            $table->integer('variacao_semanal')->default(0)->after('variacao_diaria')
-                ->comment('Número absoluto de anúncios nos últimos 7 dias');
-            $table->integer('numero_anuncios')->default(0)->after('variacao_semanal')
-                ->comment('Quantidade total de anúncios associados');
-            $table->integer('numero_criativos')->default(0)->after('numero_anuncios')
-                ->comment('Quantidade total de criativos vinculados (calculado automaticamente)');
+            // Verificando se as colunas já existem antes de adicioná-las
+            if (!Schema::hasColumn('anuncios', 'variacao_diaria')) {
+                $table->integer('variacao_diaria')->default(0)->after('contador_anuncios')
+                    ->comment('Número absoluto de anúncios nas últimas 24h');
+            }
+
+            if (!Schema::hasColumn('anuncios', 'variacao_semanal')) {
+                $table->integer('variacao_semanal')->default(0)->after('variacao_diaria')
+                    ->comment('Número absoluto de anúncios nos últimos 7 dias');
+            }
+
+            if (!Schema::hasColumn('anuncios', 'numero_anuncios')) {
+                $table->integer('numero_anuncios')->default(0)->after('variacao_semanal')
+                    ->comment('Quantidade total de anúncios associados');
+            }
+
+            if (!Schema::hasColumn('anuncios', 'numero_criativos')) {
+                $table->integer('numero_criativos')->default(0)
+                    ->comment('Quantidade total de criativos vinculados (calculado automaticamente)');
+            }
         });
     }
 
@@ -29,13 +40,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('anuncios', function (Blueprint $table) {
-            $table->dropColumn([
-                'variacao_diaria',
-                'variacao_semanal',
-                'numero_anuncios',
-                'numero_criativos'
-            ]);
-        });
+        // Não removemos as colunas no down para preservar a integridade dos dados
     }
 };
