@@ -29,7 +29,6 @@ return new class extends Migration
             $table->text('user_agent')->nullable();
             $table->timestamps();
 
-            $table->foreign('template_id')->references('id')->on('video_details')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->index(['template_id', 'created_at']);
             $table->index(['user_id', 'created_at']);
