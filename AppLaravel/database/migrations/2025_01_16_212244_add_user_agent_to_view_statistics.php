@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('view_statistics', function (Blueprint $table) {
-            $table->string('user_agent')->nullable()->after('viewer_session');
+            if (!Schema::hasColumn('view_statistics', 'user_agent')) {
+                $table->string('user_agent')->nullable()->after('viewer_session');
+            }
         });
     }
 
@@ -22,7 +24,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('view_statistics', function (Blueprint $table) {
-            $table->dropColumn('user_agent');
+            if (Schema::hasColumn('view_statistics', 'user_agent')) {
+                $table->dropColumn('user_agent');
+            }
         });
     }
 };
