@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('anuncios', function (Blueprint $table) {
             $table->id();
             $table->string('titulo');
-            $table->enum('tag_principal', ['ESCALANDO', 'TESTE', 'PAUSADO']);
+            $table->string('tag_principal', 50)->nullable();
             $table->date('data_anuncio');
             $table->string('nicho');
             $table->string('pais_codigo', 2);
@@ -41,8 +41,8 @@ return new class extends Migration
 
             // Campos Calculados (serão atualizados por lógica de aplicação)
             $table->integer('contador_anuncios')->default(0);
-            $table->float('variacao_diaria')->default(0);
-            $table->float('variacao_semanal')->default(0);
+            $table->integer('variacao_diaria')->default(0)->comment('Número absoluto de anúncios nas últimas 24h');
+            $table->integer('variacao_semanal')->default(0)->comment('Número absoluto de anúncios nos últimos 7 dias');
 
             $table->timestamps();
             $table->softDeletes();
