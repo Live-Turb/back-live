@@ -11,9 +11,13 @@
 |
 */
 
+// Remover a tentativa de carregar Dotenv diretamente aqui
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
+
+// Definir o caminho do .env como a raiz do projeto
+$app->useEnvironmentPath(dirname(__DIR__, 2));
 
 /*
 |--------------------------------------------------------------------------
