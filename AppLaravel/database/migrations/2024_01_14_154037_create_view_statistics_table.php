@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('view_statistics', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('template_id');
+            $table->unsignedBigInteger('template_id')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->string('viewer_ip');
             $table->string('viewer_session')->nullable();
@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('utm_campaign')->nullable();
             $table->integer('view_duration')->nullable();
             $table->boolean('is_unique')->default(true);
+            $table->text('user_agent')->nullable();
             $table->timestamps();
 
             $table->foreign('template_id')->references('id')->on('video_details')->onDelete('cascade');
